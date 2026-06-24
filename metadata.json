@@ -1,0 +1,6 @@
+{
+  "name": "Sedot WC Prima Jaya",
+  "description": "Landing page resmi Sedot WC Prima Jaya - Layanan Sedot WC Profesional, Cepat, Bersih, dan Tuntas 24 Jam.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
