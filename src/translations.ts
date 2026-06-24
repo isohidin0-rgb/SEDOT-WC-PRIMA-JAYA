@@ -306,6 +306,14 @@ export const translationData = {
     floatingWaOptionWa: "Pesan via WhatsApp",
     floatingWaOptionCall: "Telepon Langsung (24 Jam)",
     floatingWaOptionEmail: "Kirim Email Kami",
+
+    // Data Saver translations
+    dataSaverToggle: "Hemat Data",
+    dataSaverActive: "Mode Hemat Data Aktif",
+    dataSaverNotification: "Koneksi lambat terdeteksi. Gambar dinonaktifkan untuk menghemat kuota Anda.",
+    dataSaverLoadImage: "Muat Gambar",
+    dataSaverPlaceholderText: "Gambar ditangguhkan (Hemat Data)",
+    dataSaverLoadAll: "Muat Semua Gambar",
   },
   en: {
     // Brand / general
@@ -580,5 +588,13 @@ export const translationData = {
     floatingWaOptionWa: "Chat on WhatsApp",
     floatingWaOptionCall: "Direct Call (24 Hours)",
     floatingWaOptionEmail: "Send an Email",
+
+    // Data Saver translations
+    dataSaverToggle: "Data Saver",
+    dataSaverActive: "Data Saver Active",
+    dataSaverNotification: "Slow connection detected. Images disabled to save your bandwidth.",
+    dataSaverLoadImage: "Load Image",
+    dataSaverPlaceholderText: "Image deferred (Data Saver)",
+    dataSaverLoadAll: "Load All Images",
   }
 };

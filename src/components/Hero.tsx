@@ -2,6 +2,7 @@ import { Phone, Check, Shield } from "lucide-react";
 import { motion } from "motion/react";
 import { CONTACT_PHONE_DISPLAY } from "../types";
 import { useLanguage } from "../LanguageContext";
+import LazyImage from "./LazyImage";
 
 interface HeroProps {
   onOpenOrderModal: () => void;
@@ -20,11 +21,10 @@ export default function Hero({ onOpenOrderModal }: HeroProps) {
       <div className="absolute inset-0 z-0 h-full w-full">
         <div className="relative h-full w-full">
           {/* Overlay to ensure readability and city depth */}
-          <img
+          <LazyImage
             src="/src/assets/images/Ubah_nama_SEDOT_WC_202606250047.jpeg"
             alt="Sedot WC Prima Jaya Armada"
-            referrerPolicy="no-referrer"
-            className="h-full w-full object-cover object-center brightness-[0.4] md:brightness-100 lg:object-right"
+            className="h-full w-full brightness-[0.4] md:brightness-100"
           />
           {/* Subtle gradient to dark overlay for mobile view compatibility */}
           <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/40 to-transparent md:hidden" />

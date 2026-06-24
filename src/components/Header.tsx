@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Truck, Phone, Menu, X, Sun, Moon } from "lucide-react";
+import { Truck, Phone, Menu, X, Sun, Moon, WifiOff } from "lucide-react";
 import { motion, AnimatePresence, useScroll, useSpring } from "motion/react";
 import { CONTACT_PHONE_DISPLAY } from "../types";
 import { useLanguage } from "../LanguageContext";
+import { useNetwork } from "../NetworkContext";
 
 interface HeaderProps {
   onOpenOrderModal: () => void;
@@ -15,6 +16,7 @@ export default function Header({ onOpenOrderModal, theme, onToggleTheme }: Heade
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { language, setLanguage, t } = useLanguage();
+  const { lowDataMode, setLowDataMode } = useNetwork();
 
   // Setup motion scroll progress tracking
   const { scrollYProgress } = useScroll();
@@ -150,6 +152,23 @@ export default function Header({ onOpenOrderModal, theme, onToggleTheme }: Heade
 
           {/* TOMBOL Kanan (Tema + Bahasa + Kontak) */}
           <div className="hidden md:flex items-center gap-4" id="header-contact-desktop">
+            {/* Data Saver Mode Toggle Button */}
+            <button
+              onClick={() => setLowDataMode(!lowDataMode)}
+              className={`flex h-10 px-3 items-center justify-center gap-1.5 rounded-lg border transition-all duration-300 shadow-sm cursor-pointer ${
+                lowDataMode
+                  ? "border-green-200 dark:border-green-950 bg-green-500/10 text-green-600 dark:text-green-400 font-extrabold"
+                  : "border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary dark:hover:text-accent"
+              }`}
+              title={t.dataSaverToggle}
+              aria-label="Toggle Data Saver Mode"
+              id="desktop-data-saver-toggle"
+            >
+              <WifiOff className={`h-4 w-4 ${lowDataMode ? "animate-pulse text-green-500" : ""}`} />
+              <span className="text-xs">{t.dataSaverToggle}</span>
+              {lowDataMode && <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-ping shrink-0" />}
+            </button>
+
             {/* Language Switcher Button */}
             <button
               onClick={() => setLanguage(language === "id" ? "en" : "id")}
@@ -226,6 +245,21 @@ export default function Header({ onOpenOrderModal, theme, onToggleTheme }: Heade
               <span className={language === "id" ? "text-primary dark:text-accent font-black" : "opacity-45"}>ID</span>
               <span className="text-gray-300 dark:text-gray-700">/</span>
               <span className={language === "en" ? "text-primary dark:text-accent font-black" : "opacity-45"}>EN</span>
+            </button>
+
+            {/* Mobile Data Saver Toggle Button */}
+            <button
+              onClick={() => setLowDataMode(!lowDataMode)}
+              className={`flex h-8 px-2 items-center justify-center gap-1 rounded-md border transition-all duration-200 cursor-pointer ${
+                lowDataMode
+                  ? "border-green-200 dark:border-green-950 bg-green-500/10 text-green-600 dark:text-green-450 font-extrabold text-[10px]"
+                  : "border-gray-150 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 text-[10px]"
+              }`}
+              aria-label="Toggle Data Saver Mode"
+              id="mobile-data-saver-toggle"
+            >
+              <WifiOff className={`h-3.5 w-3.5 ${lowDataMode ? "text-green-500 animate-pulse" : ""}`} />
+              <span>{t.dataSaverToggle}</span>
             </button>
 
             {/* Mobile Theme Toggle Button */}

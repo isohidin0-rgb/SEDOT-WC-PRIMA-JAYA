@@ -2,13 +2,17 @@ import React, { useState } from "react";
 import { Star, Image as ImageIcon, Eye, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useLanguage } from "../LanguageContext";
+import { useNetwork } from "../NetworkContext";
+import LazyImage from "./LazyImage";
 
 export default function TestimonialsAndGallery() {
   const [selectedImageIdx, setSelectedImageIdx] = useState<number | null>(null);
   const { t } = useLanguage();
+  const { lowDataMode, loadSingleImage } = useNetwork();
 
   const openLightbox = (index: number) => {
     setSelectedImageIdx(index);
+    loadSingleImage(t.gallery[index].imageUrl);
   };
 
   const closeLightbox = () => {
@@ -18,15 +22,30 @@ export default function TestimonialsAndGallery() {
   const nextImage = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (selectedImageIdx !== null) {
-      setSelectedImageIdx((selectedImageIdx + 1) % t.gallery.length);
+      const nextIdx = (selectedImageIdx + 1) % t.gallery.length;
+      setSelectedImageIdx(nextIdx);
+      loadSingleImage(t.gallery[nextIdx].imageUrl);
     }
   };
 
   const prevImage = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (selectedImageIdx !== null) {
-      setSelectedImageIdx((selectedImageIdx - 1 + t.gallery.length) % t.gallery.length);
+      const prevIdx = (selectedImageIdx - 1 + t.gallery.length) % t.gallery.length;
+      setSelectedImageIdx(prevIdx);
+      loadSingleImage(t.gallery[prevIdx].imageUrl);
     }
+  };
+
+  const getInitials = (name: string) => {
+    const cleanedName = name.replace(/^(Bapak|Ibu|Bpk|Mas|Mbak|Sdr|Sdri)\s+/i, "");
+    return cleanedName
+      .split(" ")
+      .filter(Boolean)
+      .map((word) => word[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
   };
 
   return (
@@ -67,12 +86,19 @@ export default function TestimonialsAndGallery() {
 
                   {/* Profile info */}
                   <div className="flex items-center gap-3 mt-5 pt-4 border-t border-gray-200/50 dark:border-gray-800">
-                    <img
-                      src={item.avatarUrl}
-                      alt={item.name}
-                      referrerPolicy="no-referrer"
-                      className="h-10 w-10 rounded-full object-cover shadow-sm border border-white dark:border-gray-800"
-                    />
+                    {!lowDataMode ? (
+                      <img
+                        src={item.avatarUrl}
+                        alt={item.name}
+                        referrerPolicy="no-referrer"
+                        className="h-10 w-10 rounded-full object-cover shadow-sm border border-white dark:border-gray-800 animate-fade-in"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 dark:bg-accent/15 text-primary dark:text-accent border border-primary/20 dark:border-accent/20 text-xs font-black shadow-sm uppercase">
+                        {getInitials(item.name)}
+                      </div>
+                    )}
                     <div className="flex flex-col leading-tight">
                       <span className="text-xs font-bold text-primary dark:text-white">{item.name}</span>
                       <span className="text-[10px] text-gray-400 dark:text-gray-500 font-semibold">{item.role}</span>
@@ -103,14 +129,13 @@ export default function TestimonialsAndGallery() {
                     onClick={() => openLightbox(idx)}
                     className="group relative aspect-square overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-900 cursor-pointer shadow-sm border border-gray-100 dark:border-gray-800"
                   >
-                    <img
+                    <LazyImage
                       src={img.imageUrl}
                       alt={img.alt}
-                      referrerPolicy="no-referrer"
-                      className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
+                      className="h-full w-full transition-transform duration-500 group-hover:scale-110"
                     />
                     {/* Hover state */}
-                    <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">
                       <Eye className="h-6 w-6 text-white transform scale-75 group-hover:scale-100 transition-transform duration-300" />
                     </div>
                   </div>
@@ -121,7 +146,7 @@ export default function TestimonialsAndGallery() {
               <div className="flex justify-end mt-2">
                 <button
                   onClick={() => openLightbox(0)}
-                  className="inline-flex items-center gap-2 text-xs font-bold text-primary dark:text-accent hover:text-primary/80 dark:hover:text-accent-dark bg-primary/5 dark:bg-accent/10 hover:bg-primary/10 dark:hover:bg-accent/20 border border-primary/10 dark:border-accent/20 px-4 py-2 rounded-lg transition-colors"
+                  className="inline-flex items-center gap-2 text-xs font-bold text-primary dark:text-accent hover:text-primary/80 dark:hover:text-accent-dark bg-primary/5 dark:bg-accent/10 hover:bg-primary/10 dark:hover:bg-accent/20 border border-primary/10 dark:border-accent/20 px-4 py-2 rounded-lg transition-colors cursor-pointer"
                 >
                   <ImageIcon className="h-4 w-4" />
                   <span>{t.viewAllGallery}</span>
@@ -142,7 +167,7 @@ export default function TestimonialsAndGallery() {
           >
             <button
               onClick={closeLightbox}
-              className="absolute top-4 right-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 transition-colors"
+              className="absolute top-4 right-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 transition-colors cursor-pointer"
               aria-label="Close lightbox"
             >
               <X className="h-6 w-6" />
@@ -150,7 +175,7 @@ export default function TestimonialsAndGallery() {
 
             <button
               onClick={prevImage}
-              className="absolute left-4 rounded-full bg-white/10 p-3 text-white hover:bg-white/20 transition-colors hidden sm:block"
+              className="absolute left-4 rounded-full bg-white/10 p-3 text-white hover:bg-white/20 transition-colors hidden sm:block cursor-pointer animate-fade-in"
               aria-label="Previous image"
             >
               <ChevronLeft className="h-6 w-6" />
@@ -176,7 +201,7 @@ export default function TestimonialsAndGallery() {
 
             <button
               onClick={nextImage}
-              className="absolute right-4 rounded-full bg-white/10 p-3 text-white hover:bg-white/20 transition-colors hidden sm:block"
+              className="absolute right-4 rounded-full bg-white/10 p-3 text-white hover:bg-white/20 transition-colors hidden sm:block cursor-pointer animate-fade-in"
               aria-label="Next image"
             >
               <ChevronRight className="h-6 w-6" />
@@ -187,4 +212,3 @@ export default function TestimonialsAndGallery() {
     </section>
   );
 }
-
