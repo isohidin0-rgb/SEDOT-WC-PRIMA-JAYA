@@ -4,6 +4,8 @@ import Hero from "./components/Hero";
 import InfoBar from "./components/InfoBar";
 import AboutAndServices from "./components/AboutAndServices";
 import TestimonialsAndGallery from "./components/TestimonialsAndGallery";
+import CallBackSection from "./components/CallBackSection";
+import CallBackModal from "./components/CallBackModal";
 import CoverageAreas from "./components/CoverageAreas";
 import FAQ from "./components/FAQ";
 import Footer from "./components/Footer";
@@ -17,6 +19,7 @@ import { WifiOff, X } from "lucide-react";
 
 export default function App() {
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  const [isCallBackModalOpen, setIsCallBackModalOpen] = useState(false);
   const { lowDataMode, isWeakConnection } = useNetwork();
   const { t } = useLanguage();
   const [showToast, setShowToast] = useState(false);
@@ -64,16 +67,29 @@ export default function App() {
     setIsOrderModalOpen(false);
   };
 
+  const handleOpenCallBackModal = () => {
+    setIsCallBackModalOpen(true);
+  };
+
+  const handleCloseCallBackModal = () => {
+    setIsCallBackModalOpen(false);
+  };
+
   return (
     <div className="relative min-h-screen flex flex-col overflow-x-hidden antialiased select-none bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300" id="app-root">
       {/* Sticky Header with navigation, action button, and theme switcher */}
-      <Header onOpenOrderModal={handleOpenOrderModal} theme={theme} onToggleTheme={toggleTheme} />
+      <Header 
+        onOpenOrderModal={handleOpenOrderModal} 
+        onOpenCallBackModal={handleOpenCallBackModal}
+        theme={theme} 
+        onToggleTheme={toggleTheme} 
+      />
 
       {/* Main Sections */}
       <main className="flex-grow" id="app-main">
         {/* Hero Section - Animate immediately on load */}
         <ScrollReveal duration={0.8} yOffset={20}>
-          <Hero onOpenOrderModal={handleOpenOrderModal} />
+          <Hero onOpenOrderModal={handleOpenOrderModal} onOpenCallBackModal={handleOpenCallBackModal} />
         </ScrollReveal>
 
         {/* Info Bar / Keunggulan Cepat */}
@@ -89,6 +105,11 @@ export default function App() {
         {/* Testimoni & Galeri Split Section */}
         <ScrollReveal>
           <TestimonialsAndGallery />
+        </ScrollReveal>
+
+        {/* Minta Call Back / Schedule Appointment Section */}
+        <ScrollReveal>
+          <CallBackSection />
         </ScrollReveal>
 
         {/* Wilayah Jangkauan Layanan */}
@@ -109,6 +130,13 @@ export default function App() {
       <AnimatePresence>
         {isOrderModalOpen && (
           <ContactModal isOpen={isOrderModalOpen} onClose={handleCloseOrderModal} />
+        )}
+      </AnimatePresence>
+
+      {/* Interactive Call Back Request Modal */}
+      <AnimatePresence>
+        {isCallBackModalOpen && (
+          <CallBackModal isOpen={isCallBackModalOpen} onClose={handleCloseCallBackModal} />
         )}
       </AnimatePresence>
 

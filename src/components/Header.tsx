@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Truck, Phone, Menu, X, Sun, Moon, WifiOff } from "lucide-react";
+import { Truck, Phone, Menu, X, Sun, Moon, WifiOff, Calendar } from "lucide-react";
 import { motion, AnimatePresence, useScroll, useSpring } from "motion/react";
 import { CONTACT_PHONE_DISPLAY } from "../types";
 import { useLanguage } from "../LanguageContext";
@@ -7,11 +7,12 @@ import { useNetwork } from "../NetworkContext";
 
 interface HeaderProps {
   onOpenOrderModal: () => void;
+  onOpenCallBackModal: () => void;
   theme: "light" | "dark";
   onToggleTheme: () => void;
 }
 
-export default function Header({ onOpenOrderModal, theme, onToggleTheme }: HeaderProps) {
+export default function Header({ onOpenOrderModal, onOpenCallBackModal, theme, onToggleTheme }: HeaderProps) {
   const [activeSection, setActiveSection] = useState("beranda");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -213,6 +214,16 @@ export default function Header({ onOpenOrderModal, theme, onToggleTheme }: Heade
               </AnimatePresence>
             </button>
 
+            {/* Call Back Button */}
+            <button
+              onClick={onOpenCallBackModal}
+              className="flex items-center gap-1.5 h-10 px-3.5 rounded-lg bg-primary/5 hover:bg-primary/10 border border-primary/20 text-primary dark:bg-accent/10 dark:hover:bg-accent/20 dark:border-accent/20 dark:text-accent font-extrabold text-xs transition-all shadow-sm hover:scale-105 active:scale-95 cursor-pointer"
+              id="desktop-callback-trigger"
+            >
+              <Calendar className="h-4 w-4" />
+              <span>{t.navCallBack}</span>
+            </button>
+
             {/* CTA Phone Button */}
             <button
               onClick={onOpenOrderModal}
@@ -317,6 +328,17 @@ export default function Header({ onOpenOrderModal, theme, onToggleTheme }: Heade
                 </a>
               ))}
               <div className="pt-4 border-t border-gray-100 dark:border-gray-800 flex flex-col gap-2">
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    onOpenCallBackModal();
+                  }}
+                  className="w-full flex items-center justify-center gap-2 rounded-lg bg-primary/10 dark:bg-accent/15 border border-primary/20 dark:border-accent/20 py-3 font-bold text-primary dark:text-accent shadow-sm"
+                >
+                  <Calendar className="h-5 w-5" />
+                  {t.navCallBack}
+                </button>
+
                 <button
                   onClick={() => {
                     setIsMobileMenuOpen(false);

@@ -1,4 +1,4 @@
-import { Phone, Check, Shield } from "lucide-react";
+import { Phone, Check, Shield, Calendar } from "lucide-react";
 import { motion } from "motion/react";
 import { CONTACT_PHONE_DISPLAY } from "../types";
 import { useLanguage } from "../LanguageContext";
@@ -6,10 +6,11 @@ import LazyImage from "./LazyImage";
 
 interface HeroProps {
   onOpenOrderModal: () => void;
+  onOpenCallBackModal: () => void;
 }
 
-export default function Hero({ onOpenOrderModal }: HeroProps) {
-  const { t } = useLanguage();
+export default function Hero({ onOpenOrderModal, onOpenCallBackModal }: HeroProps) {
+  const { t, language } = useLanguage();
   const features = t.heroFeatures;
 
   return (
@@ -95,16 +96,16 @@ export default function Hero({ onOpenOrderModal }: HeroProps) {
               ))}
             </motion.div>
 
-            {/* Giant Yellow CTA Button */}
+            {/* Giant Yellow CTA Button & Secondary Call Back button */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.6 }}
-              className="mt-10 self-start w-full sm:w-auto"
+              className="mt-10 flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
             >
               <button
                 onClick={onOpenOrderModal}
-                className="group relative flex w-full sm:w-auto items-center justify-center gap-4 rounded-xl bg-accent px-6 py-4 text-left font-bold text-primary shadow-2xl transition-all duration-300 hover:bg-accent-dark hover:-translate-y-1 hover:shadow-accent/30 active:translate-y-0"
+                className="group relative flex flex-1 sm:flex-initial items-center justify-center gap-4 rounded-xl bg-accent px-6 py-4 text-left font-bold text-primary shadow-2xl transition-all duration-300 hover:bg-accent-dark hover:-translate-y-1 hover:shadow-accent/30 active:translate-y-0 cursor-pointer animate-pulse-subtle"
                 id="btn-hero-cta"
               >
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary text-accent transition-colors group-hover:bg-primary/95">
@@ -116,6 +117,24 @@ export default function Hero({ onOpenOrderModal }: HeroProps) {
                   </span>
                   <span className="text-xl font-extrabold sm:text-2xl tracking-tight text-primary">
                     {CONTACT_PHONE_DISPLAY}
+                  </span>
+                </div>
+              </button>
+
+              <button
+                onClick={onOpenCallBackModal}
+                className="group relative flex flex-1 sm:flex-initial items-center justify-center gap-4 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 px-6 py-4 text-left font-bold text-white shadow-2xl transition-all duration-300 hover:-translate-y-1 active:translate-y-0 cursor-pointer"
+                id="btn-hero-callback"
+              >
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white/10 text-white transition-colors">
+                  <Calendar className="h-6 w-6 stroke-[2]" />
+                </div>
+                <div className="flex flex-col leading-tight">
+                  <span className="text-xs font-black text-accent uppercase tracking-widest">
+                    {t.navCallBack}
+                  </span>
+                  <span className="text-lg font-extrabold sm:text-xl tracking-tight">
+                    {language === "id" ? "Slot Gratis" : "Free Slot"}
                   </span>
                 </div>
               </button>
